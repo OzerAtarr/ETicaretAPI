@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ETicaretAPI.Persistence
 {
-    static class Configurations
+    static class Configuration
     {
         static public string ConnectionString
         {
