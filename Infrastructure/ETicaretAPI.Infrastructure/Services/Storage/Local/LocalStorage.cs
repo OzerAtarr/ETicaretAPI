@@ -1,26 +1,18 @@
 ﻿using ETicaretAPI.Application.Abstractions.Storage.Local;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ETicaretAPI.Infrastructure.Services.Storage.Local
 {
-    public class LocalStorage : ILocalStorage
+    public class LocalStorage : Storage, ILocalStorage
     {
-        readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public LocalStorage(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
         }
-
-        public async Task DeleteAsync(string path, string fileName) =>
-            File.Delete($"{path}\\{fileName}");
-
+        public async Task DeleteAsync(string path, string fileName)
+            => File.Delete($"{path}\\{fileName}");
 
         public List<string> GetFiles(string path)
         {
@@ -28,10 +20,9 @@ namespace ETicaretAPI.Infrastructure.Services.Storage.Local
             return directory.GetFiles().Select(f => f.Name).ToList();
         }
 
-        public bool HasFile(string path, string fileName) =>
-            File.Exists($"{path}\\{fileName}");
-
-        public async Task<bool> CopyFileAsync(string path, IFormFile file)
+        public bool HasFile(string path, string fileName)
+            => File.Exists($"{path}\\{fileName}");
+        async Task<bool> CopyFileAsync(string path, IFormFile file)
         {
             try
             {
@@ -54,15 +45,13 @@ namespace ETicaretAPI.Infrastructure.Services.Storage.Local
                 Directory.CreateDirectory(uploadPath);
 
             List<(string fileName, string path)> datas = new();
-
             foreach (IFormFile file in files)
             {
+                string fileNewName = await FileRenameAsync(uploadPath, file.Name, HasFile);
 
-                await CopyFileAsync($"{uploadPath}\\{file.Name}", file);
-                datas.Add((file.Name, $"{path}\\{file.Name}"));
+                await CopyFileAsync($"{uploadPath}\\{fileNewName}", file);
+                datas.Add((fileNewName, $"{path}\\{fileNewName}"));
             }
-
-
 
             return datas;
         }

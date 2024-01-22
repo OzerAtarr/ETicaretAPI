@@ -165,7 +165,7 @@ namespace ETicaretAPI.API.Controllers
 
             //await _invoiceFileWriteRepository.SaveAsync();
 
-            var datas =  await _storageService.UploadAsync("resource/files", Request.Form.Files);
+            var datas =  await _storageService.UploadAsync("files", Request.Form.Files);
             await _invoiceFileWriteRepository.AddRangeAsync(datas.Select(d => new InvoiceFile()
             {
                 FileName = d.fileName,
