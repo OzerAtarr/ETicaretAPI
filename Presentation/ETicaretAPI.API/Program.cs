@@ -14,8 +14,8 @@ builder.Services.AddInfrastructureServices();
 
     
 //builder.Services.AddStorage(StorageType.Azure);
-builder.Services.AddStorage<LocalStorage>();
-//builder.Services.AddStorage<AzureStorage>();
+//builder.Services.AddStorage<LocalStorage>();
+builder.Services.AddStorage<AzureStorage>();
 //builder.Services.AddStorage(ETicaretAPI.Infrastructure.Enums.StorageType.Azure);
 
 builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
